@@ -1,10 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Messages from "./Messages";
 import Input from "./Input";
 import { ChatContext } from "../context/ChatContext";
 
 const Chat = () => {
-	const { data } = useContext(ChatContext);
+	const { data, dispatch } = useContext(ChatContext);
+
+	useEffect(() => {
+		// Clear chat data when the Chat component mounts
+		dispatch({ type: "CLEAR_CHAT" });
+	}, [dispatch]);
 
 	return (
 		<div className="chat">

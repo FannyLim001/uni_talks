@@ -24,38 +24,50 @@ export const Register = () => {
 		const password = e.target[2].value;
 		const file = e.target[3].files[0];
 
+		// Add domain validation
+		const validDomains = ["pcr.ac.id", "mahasiswa.pcr.ac.id"];
+		const isValidDomain = validDomains.some((domain) =>
+			email.endsWith(`@${domain}`)
+		);
+
+		if (!isValidDomain) {
+			setErr(true);
+			return;
+		}
+
 		//console.log(username, email, password);
 		try {
 			const res = await createUserWithEmailAndPassword(auth, email, password);
 
 			const storageRef = ref(storage, displayName);
 
-			const uploadTask = uploadBytesResumable(storageRef, file);
+			const defaultImageURL = "public/images/default_pfp.png"; // Set your default image URL here
 
-			uploadTask.on(
-				(error) => {
-					// Handle unsuccessful uploads
-					setErr(true);
-				},
-				() => {
-					// Handle successful uploads on complete
-					// For instance, get the download URL: https://firebasestorage.googleapis.com/...
-					getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-						await updateProfile(res.user, {
-							displayName,
-							photoURL: downloadURL,
-						});
-						await setDoc(doc(db, "users", res.user.uid), {
-							uid: res.user.uid,
-							displayName,
-							email,
-							photoURL: downloadURL,
-						});
-						await setDoc(doc(db, "userChats", res.user.uid), {});
-						navigate("/");
+			const uploadTask = file
+				? uploadBytesResumable(storageRef, file)
+				: Promise.resolve({ ref: { fullPath: defaultImageURL } }); // Resolve with a default image URL if no file is selected
+
+			uploadTask
+				.then((uploadTaskSnapshot) => {
+					return file ? getDownloadURL(uploadTaskSnapshot.ref) : defaultImageURL; // Use the default image URL if no file is selected
+				})
+				.then(async (downloadURL) => {
+					await updateProfile(res.user, {
+						displayName,
+						photoURL: downloadURL,
 					});
-				}
-			);
+					await setDoc(doc(db, "users", res.user.uid), {
+						uid: res.user.uid,
+						displayName,
+						email,
+						photoURL: downloadURL,
+					});
+					await setDoc(doc(db, "userChats", res.user.uid), {});
+					navigate("/");
+				})
+				.catch((error) => {
+					setErr(true);
+				});
 		} catch (err) {
 			setErr(true);
 		}

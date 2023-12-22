@@ -26,7 +26,7 @@ const Navbar = () => {
 				<img src={currentUser.photoURL} onClick={handleImageClick} />
 				{dropdownOpen && (
 					<div id="myDropdown" className="dropdown-content">
-						<span>{currentUser.displayName}</span>
+						<span>{currentUser.displayName}</span><br/>
 						<button onClick={handleLogout}>Logout</button>
 					</div>
 				)}

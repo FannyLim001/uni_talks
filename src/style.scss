@@ -23,7 +23,6 @@
 	padding: 0;
 	box-sizing: border-box;
 	font-family: "Poppins", serif;
-	color: #e9f5ff;
 }
 
 .formContainer {
@@ -32,10 +31,11 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	color: #e9f5ff;
 
 	.formWrapper {
 		background-color: #5d6384;
-		padding: 20px 40px;
+		padding: 20px;
 		border-radius: 25px;
 		display: flex;
 		flex-direction: column;
@@ -57,6 +57,7 @@
 			flex-direction: column;
 			gap: 15px;
 		}
+
 		.formRedirect {
 			display: flex;
 			gap: 10px;
@@ -69,14 +70,16 @@
 				border-radius: 25px;
 				cursor: pointer;
 			}
+
 			p {
 				padding: 10px;
 
-				.redirectLink {
-					color: #c1e4ff;
+				.redirectLink a {
+					color: #e9f5ff;
 				}
 			}
 		}
+
 		.formInput {
 			display: flex;
 			flex-direction: column;
@@ -89,7 +92,8 @@
 			input {
 				padding: 5px;
 				border: none;
-				background-color: #5d6384;
+				background-color: transparent;
+				color: #e9f5ff;
 				border-bottom: 1px solid #c1e4ff;
 			}
 		}
@@ -100,36 +104,44 @@
 	background-color: #c1e5ff;
 	height: 100vh;
 	display: flex;
+	flex-direction: column; /* Adjusted to column layout */
 	align-items: center;
-	justify-content: center;
+	color: #e9f5ff;
+	padding: 20px;
 
 	.container {
 		border: 1px solid white;
 		border-radius: 25px;
-		width: 70%;
-		height: 80%;
+		width: 70%; /* Default width for larger screens */
+		height: 100vh;
 		display: flex;
-		overflow: hidden;
+		overflow: auto;
+
 		@include tablet {
 			width: 90%;
-
-            .sidebar{
-                flex: 0.1;
-            }
 		}
+
 		@include laptop {
 			width: 80%;
+			flex-direction: row; /* Adjusted to row layout for larger screens */
 		}
 
-        @include mobile {
-			.chat{
-                display: none;
-            }
-        }
+		@include mobile {
+			width: 100%; /* Full width for mobile screens */
+			flex-direction: column;
+		}
 
 		.sidebar {
 			flex: 1;
 			background-color: #5d6384;
+			position: relative;
+			overflow-y: auto;
+
+			@include mobile {
+				width: 100%; /* Full width for mobile screens */
+				flex: 0 0 auto; /* Reset flex properties for mobile */
+				overflow-y: visible; /* Reset overflow for mobile */
+			}
 
 			.navbar {
 				display: flex;
@@ -143,12 +155,8 @@
 					font-family: "Lilita One", serif;
 					font-size: 25px;
 					color: #c1e4ff;
-					// @include tablet{
-					//     display: none;
-					// }
 				}
 
-				/* The container <div> - needed to position the dropdown content */
 				.user {
 					position: relative;
 					display: inline-block;
@@ -160,7 +168,6 @@
 						object-fit: cover;
 					}
 
-					/* Dropdown Content (Hidden by Default) */
 					.dropdown-content {
 						position: absolute;
 						background-color: #72799f;
@@ -169,9 +176,33 @@
 						button {
 							border: none;
 							background-color: #72799f;
+							color: #e9f5ff;
 							cursor: pointer;
 						}
 					}
+				}
+			}
+
+			.chats {
+				h4 {
+					padding-top: 20px;
+					padding-left: 20px;
+				}
+			}
+
+			.chat-contact {
+				padding: 20px;
+				position: absolute;
+				bottom: 0;
+				right: 0;
+
+				button {
+					border: none;
+					padding: 10px 20px;
+					border-radius: 10px;
+					background-color: #c1e4ff;
+					color: #5d6384;
+					cursor: pointer;
 				}
 			}
 
@@ -184,10 +215,12 @@
 
 				.searchForm {
 					padding: 20px;
+
 					input {
 						background-color: transparent;
 						border: none;
 						outline: none;
+						color: #e9f5ff;
 
 						&::placeholder {
 							color: #e9f5ff;
@@ -222,6 +255,7 @@
 				}
 			}
 		}
+
 		.chat {
 			flex: 2;
 
@@ -237,7 +271,12 @@
 				background-color: #464a60;
 				padding: 20px;
 				height: calc(100% - 140px);
-				overflow: scroll;
+				overflow-y: auto;
+
+				.message-date {
+					text-align: center;
+					padding-bottom: 15px;
+				}
 
 				.message {
 					display: flex;
@@ -247,12 +286,14 @@
 					.messageInfo {
 						display: flex;
 						flex-direction: column;
+
 						img {
 							width: 40px;
 							height: 40px;
 							border-radius: 50%;
 							object-fit: cover;
 						}
+
 						span {
 							color: #c4d1dc;
 							font-size: 13px;
@@ -272,6 +313,15 @@
 							border-radius: 0px 10px 10px 10px;
 							max-width: max-content;
 						}
+
+						img {
+							width: 30%;
+						}
+
+						a {
+							color: #e9f5ff;
+							margin: auto;
+						}
 					}
 
 					&.owner {
@@ -279,9 +329,19 @@
 
 						.messageContent {
 							align-items: flex-end;
+
 							p {
 								background-color: #c1e4ff;
 								border-radius: 10px 0px 10px 10px;
+							}
+
+							img {
+								width: 30%;
+							}
+
+							a {
+								color: #e9f5ff;
+								margin: auto;
 							}
 						}
 					}
@@ -312,6 +372,12 @@
 				.send {
 					display: flex;
 					align-items: center;
+
+					label.file-input {
+						color: #5d6384 !important;
+						cursor: pointer;
+						margin-right: 20px;
+					}
 
 					button {
 						border: none;
